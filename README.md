@@ -5,6 +5,8 @@ A microservice for pulling travis stats into nodezoo
 
 - __Sponsor:__ [nearForm][]
 
+- __Work in progress:__ This module is currently a work in progress.
+
 ## Install
 1. clone this repo into a root _/nodezoo_ folder.
 2. run `npm install`
