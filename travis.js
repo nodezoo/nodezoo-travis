@@ -19,11 +19,11 @@ module.exports = function travis () {
   seneca.add('role:travis,cmd:parse', cmd_parse)
 
   function cmd_get (args, done) {
-    var query = args.query
+    var name = args.name
     var res1
-    var res2
+    var res2 
 
-    var url = options.registry + query
+    var url = options.registry + name
     Request.get(url, function (err, res, body) {
       if (err) {
         return done(err)
@@ -41,13 +41,13 @@ module.exports = function travis () {
           return done(err)
         }
         else {
-          tr.repos(user, query).get(function (err, res) {
+          tr.repos(user, name).get(function (err, res) {
             if (err) {
               return done(err)
             }
             res1 = res
           })
-          tr.repos(user, query).builds.get(function (err, res) {
+          tr.repos(user, name).builds.get(function (err, res) {
             if (err) {
               return done(err)
             }
