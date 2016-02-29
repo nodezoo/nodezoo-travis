@@ -1,0 +1,32 @@
+{
+  "name": "nodezoo-travis",
+  "version": "0.1.0",
+  "description": "nodezoo.com micro-service handling travis meta data",
+  "main": "travis.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodezoo/nodezoo-travis.git"
+  },
+  "keywords": [
+    "nodezoo",
+    "seneca",
+    "travis",
+    "micro-service"
+  ],
+  "author": "Matthew O'Connor (http://github.com/matt-oc)",
+  "license": "MIT",
+  "contributors": ["Shane Lacey <shane.lacey@nearform.com> (http://github.com/shanel262)",
+    "Isaac Mahon (isaac.mahon@nearform.com)"
+  ],
+  "bugs": {
+    "url": "https://github.com/nodezoo/nodezoo-travis/issues"
+  },
+  "homepage": "https://github.com/nodezoo/nodezoo-travis#readme",
+  "dependencies": {
+    "travis-ci": "2.1.0",
+    "seneca": "1.2.0",
+    "lodash": "4.5.1",
+    "request": "2.69.0",
+    "eslint-config-seneca": "1.1.2"
+  }
+}
