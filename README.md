@@ -23,7 +23,7 @@ This micro-service recognizes the following messages:
 
 Any of the messages above can be run using curl in the following format in the command line
 ```
-curl -d '{"role":"travis","cmd":"get","query":"YOUR_TEXT_HERE"}' http://localhost:52472/act
+curl -d '{"role":"travis","cmd":"get","name":"YOUR_TEXT_HERE"}' http://localhost:52472/act
 ```
 
 ## Contributing

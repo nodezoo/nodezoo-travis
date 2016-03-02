@@ -2,6 +2,7 @@
 
 require('seneca')()
   .use('../travis.js')
+
   .add('role:info,req:part',function (args,done) {
     done()
 
@@ -18,4 +19,3 @@ require('seneca')()
   })
   .use('../node_modules/seneca-mesh', {auto:true, pins:['role:travis','role:info,req:part'], model:'publish'} )
   
-
