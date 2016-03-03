@@ -15,7 +15,8 @@
   ],
   "author": "Matthew O'Connor (http://github.com/matt-oc)",
   "license": "MIT",
-  "contributors": ["Shane Lacey <shane.lacey@nearform.com> (http://github.com/shanel262)",
+  "contributors": [
+    "Shane Lacey <shane.lacey@nearform.com> (http://github.com/shanel262)",
     "Isaac Mahon (isaac.mahon@nearform.com)"
   ],
   "bugs": {
@@ -23,10 +24,13 @@
   },
   "homepage": "https://github.com/nodezoo/nodezoo-travis#readme",
   "dependencies": {
-    "travis-ci": "2.1.0",
-    "seneca": "1.2.0",
+    "eslint-config-seneca": "1.1.2",
     "lodash": "4.5.1",
     "request": "2.69.0",
-    "eslint-config-seneca": "1.1.2"
+    "seneca": "1.2.0",
+    "seneca-balance-client": "^0.2.0",
+    "seneca-mesh": "0.5.0",
+    "toolbag": "0.9.0",
+    "travis-ci": "2.1.0"
   }
 }
