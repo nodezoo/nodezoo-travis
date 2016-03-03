@@ -1,11 +1,10 @@
-![Nodezoo](https://github.com/nodezoo/nodezoo-org/blob/master/assets/logo-nodezoo.png)
+![Nodezoo][Banner]
 
 # nodezoo-travis
-A microservice for pulling travis stats into nodezoo
+- __Lead Maintainer:__ [Matthew O'Connor][Lead]
+- __Sponsor:__ [nearForm][Sponsor]
 
-- __Sponsor:__ [nearForm][]
-
-- __Work in progress:__ This module is currently a work in progress.
+A microservice for pulling travis stats into nodezoo.
 
 ## Install
 1. clone this repo into a root _/nodezoo_ folder.
@@ -27,15 +26,20 @@ curl -d '{"role":"travis","cmd":"get","name":"YOUR_TEXT_HERE"}' http://localhost
 ```
 
 ## Contributing
-The [NodeZoo][] org encourages __open__ and __safe__ participation. If you feel you can help in any way, be it with documentation, examples, extra testing, or new features please get in touch.
+The [Nodezoo][Org] encourages __open__ and __safe__ participation.
 
-- Before contributing please review our __[Code of Conduct]__
+- [Code of Conduct][CoC]
+
+If you feel you can help in any way, be it with documentation, examples, extra testing, or new
+features please get in touch.
 
 ## License
 Copyright (c) 2016, Matthew O'Connor and other contributors.
 Licensed under [MIT][].
 
+[Banner]: https://github.com/nodezoo/nodezoo-org/blob/master/assets/logo-nodezoo.png
+[Lead]: https://github.com/mcdonnelldean
+[Sponsor]: http://www.nearform.com/
+[Org]: https://github.com/nodezoo
+[CoC]: https://github.com/nodezoo/nodezoo-org/blob/master/CoC.md
 [MIT]: ./LICENSE
-[Code of Conduct]: https://github.com/nodezoo/nodezoo-org/blob/master/CoC.md
-[nearForm]: http://www.nearform.com/
-[NodeZoo]: http://www.nodezoo.com/
