@@ -21,15 +21,13 @@ module.exports = function travis () {
   function cmd_get (args, done) {
     var travis_name = args.name
     var travis_ent = seneca.make$('travis')
-    var res1
-    var res2 
     
     var url = options.registry + travis_name
     
-    travis_ent.load$( travis_name, function(err,travis){
-      if( err ) return done(err);
+    travis_ent.load$(travis_name, function(err,travis){
+      if(err) return done(err);
       
-      if( travis && !args.update ) {
+      if(travis && !args.update) {
         return done(null,travis);
       }
       else {
@@ -45,23 +43,17 @@ module.exports = function travis () {
             if (err) {
               return done(err)
             }
-            var user = cmd_parse(data)
+            var gitData = cmd_parse(data)
+            
+            if (gitData){
+              var user = gitData[1]
+              var git_name = gitData[2]
+            }
             if (!user) {
               return done(err)
             }
             else {
-              tr.repos(user, travis_name).get(function (err, res) {
-                if (err) {
-                  return done(err)
-                }
-                res1 = res
-              })
-              tr.repos(user, travis_name).builds.get(function (err, res) {
-                if (err) {
-                  return done(err)
-                }
-                res2 = res
-                var build = Object.assign(res1.repo, res2.builds[0].config)
+              getRepo(user,git_name, function(build){
                 data.id$ = travis_name
                 travis_ent.make$(build).save$(done);
               })
@@ -69,6 +61,37 @@ module.exports = function travis () {
           })
         })
       }
+    })
+  }
+  
+  // function to extract Travis data and return object
+  function getRepo(user, git_name, cb){
+    var repo
+    var builds 
+    
+    tr.repos(user, git_name).get(function (err, res) {
+      if (err) {
+        cb(err)
+      }
+      repo = res
+      
+    })
+    tr.repos(user, git_name).builds.get(function (err, res) {
+      if (err) {
+        cb(err);
+      }
+      builds = res
+      
+      if (repo && builds.builds[0]){
+        var build = Object.assign(repo.repo, builds.builds[0].config)
+      }
+      else if(repo){
+        build = Object.assign(repo.repo)
+      }
+      else {
+        build = null;
+      }
+      cb(build);
     })
   }
   
@@ -88,11 +111,10 @@ module.exports = function travis () {
   function cmd_parse (args) {
     var m = /[\/:]([^\/:]+?)[\/:]([^\/]+?)(\.git)*$/.exec(args.giturl)
     if (m) {
-      return ('' + m[1])
+      return (m)
     }
     else {
       return null
     }
   }
 }
-
