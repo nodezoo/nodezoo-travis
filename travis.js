@@ -25,12 +25,14 @@ module.exports = function travis () {
     var url = options.registry + travis_name
     
     travis_ent.load$(travis_name, function(err,travis){
-      if(err) return done(err);
-      
+      if(err) {
+        return done(err);
+      }
       if(travis && !args.update) {
-        return done(null,travis);
+        return done(null,travis)
       }
       else {
+        //get url from npm
         Request.get(url, function (err, res, body) {
           if (err) {
             return done(err)
@@ -39,23 +41,26 @@ module.exports = function travis () {
             return done(err)
           }
           var data = JSON.parse(body)
+          //take giturl from npm data
           seneca.act('role:travis,cmd:extract', {data: data}, function (err, data) {
             if (err) {
               return done(err)
             }
+            //parse username and repo from giturl
             var gitData = cmd_parse(data)
             
             if (gitData){
               var user = gitData[1]
-              var git_name = gitData[2]
+              var gitRepo = gitData[2]
             }
             if (!user) {
               return done(err)
             }
             else {
-              getRepo(user,git_name, function(build){
+              // get Travis data using guthub username and repo name
+              getRepo(user,gitRepo, function(build){
                 data.id$ = travis_name
-                travis_ent.make$(build).save$(done);
+                travis_ent.make$(build).save$(done)
               })
             }
           })
@@ -65,20 +70,20 @@ module.exports = function travis () {
   }
   
   // function to extract Travis data and return object
-  function getRepo(user, git_name, cb){
+  function getRepo(user, gitRepo, cb){
     var repo
     var builds 
     
-    tr.repos(user, git_name).get(function (err, res) {
+    tr.repos(user, gitRepo).get(function (err, res) {
       if (err) {
         cb(err)
       }
       repo = res
       
     })
-    tr.repos(user, git_name).builds.get(function (err, res) {
+    tr.repos(user, gitRepo).builds.get(function (err, res) {
       if (err) {
-        cb(err);
+        cb(err)
       }
       builds = res
       
@@ -89,9 +94,9 @@ module.exports = function travis () {
         build = Object.assign(repo.repo)
       }
       else {
-        build = null;
+        build = null
       }
-      cb(build);
+      cb(build)
     })
   }
   
