@@ -1,8 +1,14 @@
+# nodezoo-travis
 FROM node:4
 
-ADD . /
+RUN mkdir /src
 
-EXPOSE 44009
-EXPOSE 43009
+ADD package.json /src/
 
-CMD ["node", "srv/travis-dev.js", "--seneca.options.tag=travis", "--seneca.log.all"]
+WORKDIR /src
+
+RUN npm install
+
+COPY . /src
+
+CMD ["node", "-r", "toolbag", "srv/travis-dev.js", "--seneca.options.tag=nodezoo-travis", "--seneca-log=type:act"]

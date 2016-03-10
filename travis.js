@@ -57,7 +57,7 @@ module.exports = function travis () {
               return done(err)
             }
             else {
-              // get Travis data using guthub username and repo name
+              // get Travis data using github username and repo name
               getRepo(user,gitRepo, function(build){
                 data.id$ = travis_name
                 travis_ent.make$(build).save$(done)
