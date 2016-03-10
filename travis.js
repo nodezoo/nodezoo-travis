@@ -21,18 +21,18 @@ module.exports = function travis () {
   function cmd_get (args, done) {
     var travis_name = args.name
     var travis_ent = seneca.make$('travis')
-    var res1
-    var res2 
     
     var url = options.registry + travis_name
     
-    travis_ent.load$( travis_name, function(err,travis){
-      if( err ) return done(err);
-      
-      if( travis && !args.update ) {
-        return done(null,travis);
+    travis_ent.load$(travis_name, function(err,travis){
+      if(err) {
+        return done(err);
+      }
+      if(travis && !args.update) {
+        return done(null,travis)
       }
       else {
+        //get url from npm
         Request.get(url, function (err, res, body) {
           if (err) {
             return done(err)
@@ -41,34 +41,62 @@ module.exports = function travis () {
             return done(err)
           }
           var data = JSON.parse(body)
+          //take giturl from npm data
           seneca.act('role:travis,cmd:extract', {data: data}, function (err, data) {
             if (err) {
               return done(err)
             }
-            var user = cmd_parse(data)
+            //parse username and repo from giturl
+            var gitData = cmd_parse(data)
+            
+            if (gitData){
+              var user = gitData[1]
+              var gitRepo = gitData[2]
+            }
             if (!user) {
               return done(err)
             }
             else {
-              tr.repos(user, travis_name).get(function (err, res) {
-                if (err) {
-                  return done(err)
-                }
-                res1 = res
-              })
-              tr.repos(user, travis_name).builds.get(function (err, res) {
-                if (err) {
-                  return done(err)
-                }
-                res2 = res
-                var build = Object.assign(res1.repo, res2.builds[0].config)
+              // get Travis data using github username and repo name
+              getRepo(user,gitRepo, function(build){
                 data.id$ = travis_name
-                travis_ent.make$(build).save$(done);
+                travis_ent.make$(build).save$(done)
               })
             }
           })
         })
       }
+    })
+  }
+  
+  // function to extract Travis data and return object
+  function getRepo(user, gitRepo, cb){
+    var repo
+    var builds 
+    
+    tr.repos(user, gitRepo).get(function (err, res) {
+      if (err) {
+        cb(err)
+      }
+      repo = res
+      
+    })
+    tr.repos(user, gitRepo).builds.get(function (err, res) {
+      if (err) {
+        cb(err)
+      }
+      builds = res
+      
+      if (repo && builds.builds[0]){
+        var build = Object.assign(repo.repo, builds.builds[0].config)
+      }
+      else if(repo){
+        build = Object.assign(repo.repo)
+      }
+      else {
+        build = null
+      }
+      cb(build)
     })
   }
   
@@ -88,11 +116,10 @@ module.exports = function travis () {
   function cmd_parse (args) {
     var m = /[\/:]([^\/:]+?)[\/:]([^\/]+?)(\.git)*$/.exec(args.giturl)
     if (m) {
-      return ('' + m[1])
+      return (m)
     }
     else {
       return null
     }
   }
 }
-
