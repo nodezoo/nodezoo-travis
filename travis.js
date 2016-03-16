@@ -17,13 +17,14 @@ module.exports = function travis () {
   seneca.add('role:travis,cmd:extract', cmd_extract)
   seneca.add('role:travis,cmd:get', cmd_get)
   seneca.add('role:travis,cmd:parse', cmd_parse)
+  seneca.add('role:travis,cmd:query', cmd_query)
   
   function cmd_get (args, done) {
     var travis_name = args.name
     var travis_ent = seneca.make$('travis')
     
     var url = options.registry + travis_name
-    
+    // check if in the cache
     travis_ent.load$(travis_name, function(err,travis){
       if(err) {
         return done(err);
@@ -32,7 +33,7 @@ module.exports = function travis () {
         return done(null,travis)
       }
       else {
-        //get url from npm
+        // get url from npm
         Request.get(url, function (err, res, body) {
           if (err) {
             return done(err)
@@ -41,12 +42,12 @@ module.exports = function travis () {
             return done(err)
           }
           var data = JSON.parse(body)
-          //take giturl from npm data
+          // take giturl from npm data
           seneca.act('role:travis,cmd:extract', {data: data}, function (err, data) {
             if (err) {
               return done(err)
             }
-            //parse username and repo from giturl
+            // parse username and repo from giturl
             var gitData = cmd_parse(data)
             
             if (gitData){
@@ -58,10 +59,7 @@ module.exports = function travis () {
             }
             else {
               // get Travis data using github username and repo name
-              getRepo(user,gitRepo, function(build){
-                data.id$ = travis_name
-                travis_ent.make$(build).save$(done)
-              })
+              seneca.act('role:travis,cmd:query', {name: travis_name, user: user, repo: gitRepo}, done)
             }
           })
         })
@@ -69,34 +67,53 @@ module.exports = function travis () {
     })
   }
   
-  // function to extract Travis data and return object
-  function getRepo(user, gitRepo, cb){
-    var repo
-    var builds 
+  function cmd_query(args, done){
+    var travis_ent = seneca.make$('travis')
+    var travis_name = args.name
+    var user = args.user
+    var repo = args.repo
+    var repoData
+    var buildData 
     
-    tr.repos(user, gitRepo).get(function (err, res) {
+    tr.repos(user, repo).get(function (err, res) {
       if (err) {
-        cb(err)
+        return done(err)
       }
-      repo = res
+      repoData = res
       
     })
-    tr.repos(user, gitRepo).builds.get(function (err, res) {
+    tr.repos(user, repo).builds.get(function (err, res) {
       if (err) {
-        cb(err)
+        return done(err)
       }
-      builds = res
+      buildData = res
       
-      if (repo && builds.builds[0]){
-        var build = Object.assign(repo.repo, builds.builds[0].config)
+      if (repoData && buildData.builds[0]){
+        var data = Object.assign(repoData.repo, buildData.builds[0].config)
       }
-      else if(repo){
-        build = Object.assign(repo.repo)
+      else if(repoData){
+        data = Object.assign(repoData.repo)
       }
       else {
-        build = null
+        data = null
       }
-      cb(build)
+      
+      if(data !== null){
+        // update the data if module exists in cache, if not create it
+        travis_ent.load$(travis_name, function(err,travis){
+          if(err) {
+            return done(err);
+          }
+          if(travis) {
+            return travis.data$(data).save$(done);
+          }
+          else {
+            data.id$ = travis_name
+            travis_ent.make$(data).save$(done)
+          } 
+        })
+      }
+      else return done()
     })
   }
   
