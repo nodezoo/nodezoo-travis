@@ -30,9 +30,7 @@ module.exports = function travis () {
         return done(err);
       }
       if(travis && !args.update) {
-        return {
-          done(null,travis)
-        }
+        return done(null,travis)
       }
       else {
         // get url from npm
@@ -91,16 +89,16 @@ module.exports = function travis () {
       buildData = res
       
       if (repoData && buildData.builds[0]){
-        var build = Object.assign(repoData.repo, buildData.builds[0].config)
+        var data = Object.assign(repoData.repo, buildData.builds[0].config)
       }
       else if(repoData){
-        build = Object.assign(repoData.repo)
+        data = Object.assign(repoData.repo)
       }
       else {
-        build = null
+        data = null
       }
       
-      if(build){
+      if(data !== null){
         // update the data if module exists in cache, if not create it
         travis_ent.load$(travis_name, function(err,travis){
           if(err) {
