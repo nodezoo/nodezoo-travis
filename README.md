@@ -16,6 +16,7 @@ This micro-service recognizes the following messages:
 
   * _role:travis,cmd:get_
   * _role:travis,cmd:parse_
+  * _role:travis,cmd:query_
   * _role:travis,cmd:extract_
 
 ## Running with Curl
