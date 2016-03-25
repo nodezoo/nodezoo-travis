@@ -19,6 +19,8 @@ module.exports = function travis () {
   seneca.add('role:travis,cmd:parse', cmd_parse)
   seneca.add('role:travis,cmd:query', cmd_query)
   
+  /*seneca.add('role:entity,cmd:save,name:travis',override_index)*/
+  
   function cmd_get (args, done) {
     var travis_name = args.name
     var travis_ent = seneca.make$('travis')
@@ -74,6 +76,9 @@ module.exports = function travis () {
     var repo = args.repo
     var repoData
     var buildData 
+    var name = {
+      "name":travis_name
+    }
     
     tr.repos(user, repo).get(function (err, res) {
       if (err) {
@@ -89,10 +94,10 @@ module.exports = function travis () {
       buildData = res
       
       if (repoData && buildData.builds[0]){
-        var data = Object.assign(repoData.repo, buildData.builds[0].config)
+        var data = Object.assign(name,repoData.repo, buildData.builds[0].config)
       }
       else if(repoData){
-        data = Object.assign(repoData.repo)
+        data = Object.assign(name,repoData.repo)
       }
       else {
         data = null
@@ -110,6 +115,12 @@ module.exports = function travis () {
           else {
             data.id$ = travis_name
             travis_ent.make$(data).save$(done)
+            /* DEAN!!!!!!!!!!!!!
+            This is where were are doing the override command but without the override
+            possible issue here with it not having the object saved before 
+            the insert is called, not sure yet.
+            */
+            seneca.act('role:search,cmd:insert',{data:data})
           } 
         })
       }
@@ -139,4 +150,14 @@ module.exports = function travis () {
       return null
     }
   }
+  
+  /*function override_index( args, done ) {
+    var seneca = this
+
+    seneca.prior(args, function(err,travis){
+      done(err,travis)
+
+      seneca.act('role:search,cmd:insert',{data:travis.data$()})
+    })
+  }*/
 }
