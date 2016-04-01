@@ -2,15 +2,15 @@
 
 require('seneca')()
 .use('../travis.js')
-
+.use('entity')
 .add('role:info,req:part',function (args,done) {
   done()
-  
+
   this.act('role:travis,cmd:get', {name:args.name},function (err, mod) {
     if (err) {
       return done(err);
     }
-    
+
     this.act('role:info,res:part,part:travis', {name:args.name,data:mod.data$()})
   })
 })
