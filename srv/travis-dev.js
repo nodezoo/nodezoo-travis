@@ -1,8 +1,8 @@
 'use strict'
 
 require('seneca')()
-.use('../travis.js')
 .use('entity')
+.use('../travis.js')
 .add('role:info,req:part',function (args,done) {
   done()
 
