@@ -20,7 +20,7 @@ link below for details on obtaining and running the complete system.
 - [Nodezoo: The complete system][System]
 
 ## Patterns Handled
-There are incoming messages
+Missing patterns handled
 
 ## Patterns Emitted
 
@@ -48,3 +48,4 @@ Licensed under [MIT][].
 [@nodezoo]: http://twitter.com/nodezoo
 [gitter-url]: https://gitter.im/nodezoo/nodezoo-org
 [System]: https://github.com/nodezoo/nodezoo-system
+[NodeZoo]: https://github.com/rjrodger/nodezoo
