@@ -6,25 +6,25 @@
 
 A microservice for pulling travis stats into nodezoo.
 
-## Install
-1. clone this repo into a root _/nodezoo_ folder.
-2. run `npm install`
+If you're using this microservice, and need help, you can:
 
-## Messages
+- Post a [github issue][],
+- Tweet to [@nodezoo][],
+- Ask on the [Gitter][gitter-url].
 
-This micro-service recognizes the following messages:
 
-  * _role:travis,cmd:get_
-  * _role:travis,cmd:parse_
-  * _role:travis,cmd:query_
-  * _role:travis,cmd:extract_
+## Running
+This micro-service can be ran as part of the [Nodezoo][] system. Please follow the
+link below for details on obtaining and running the complete system.
 
-## Running with Curl
+- [Nodezoo: The complete system][System]
 
-Any of the messages above can be run using curl in the following format in the command line
-```
-curl -d '{"role":"travis","cmd":"get","name":"YOUR_TEXT_HERE"}' http://localhost:52472/act
-```
+## Patterns Handled
+Missing patterns handled
+
+## Patterns Emitted
+
+There are no outgoing messages
 
 ## Contributing
 The [Nodezoo][Org] encourages __open__ and __safe__ participation.
@@ -44,3 +44,8 @@ Licensed under [MIT][].
 [Org]: https://github.com/nodezoo
 [CoC]: https://github.com/nodezoo/nodezoo-org/blob/master/CoC.md
 [MIT]: ./LICENSE
+[github issue]: https://github.com/nodezoo/nodezoo-npm/issues
+[@nodezoo]: http://twitter.com/nodezoo
+[gitter-url]: https://gitter.im/nodezoo/nodezoo-org
+[System]: https://github.com/nodezoo/nodezoo-system
+[NodeZoo]: https://github.com/rjrodger/nodezoo
