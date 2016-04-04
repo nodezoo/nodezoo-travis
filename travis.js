@@ -6,26 +6,33 @@ var _ = require('lodash')
 var tr = new Travis({
   version: '2.0.0'
 })
+var url
+var opts = {
+  registry: 'http://registry.npmjs.org/'
+}
 
 module.exports = function travis () {
   var seneca = this
   
-  var options = seneca.util.deepextend({
-    registry: 'http://registry.npmjs.org/'
-  })
+  opts = seneca.util.deepextend(opts)
   
   seneca.add('role:travis,cmd:extract', cmd_extract)
   seneca.add('role:travis,cmd:get', cmd_get)
   seneca.add('role:travis,cmd:parse', cmd_parse)
   seneca.add('role:travis,cmd:query', cmd_query)
   
-  /*seneca.add('role:entity,cmd:save,name:travis',override_index)*/
-  
+  return {
+    name: 'nodezoo-travis'
+  }
+}
+
   function cmd_get (args, done) {
+      var seneca = this
+      
     var travis_name = args.name
     var travis_ent = seneca.make$('travis')
     
-    var url = options.registry + travis_name
+    var url = opts.registry + travis_name
     // check if in the cache
     travis_ent.load$(travis_name, function(err,travis){
       if(err) {
@@ -70,14 +77,18 @@ module.exports = function travis () {
   }
   
   function cmd_query(args, done){
+    var seneca = this
     var travis_ent = seneca.make$('travis')
+    
     var travis_name = args.name
     var user = args.user
     var repo = args.repo
     var repoData
-    var buildData 
-    var name = {
-      "name":travis_name
+    var buildData
+    url = "https://travis-ci.org/" + user + "/" + repo
+    var dat = {
+      "name":travis_name,
+      "url":url
     }
     
     tr.repos(user, repo).get(function (err, res) {
@@ -94,10 +105,10 @@ module.exports = function travis () {
       buildData = res
       
       if (repoData && buildData.builds[0]){
-        var data = Object.assign(name,repoData.repo, buildData.builds[0].config)
+        var data = Object.assign(dat,repoData.repo, buildData.builds[0].config)
       }
       else if(repoData){
-        data = Object.assign(name,repoData.repo)
+        data = Object.assign(dat,repoData.repo)
       }
       else {
         data = null
@@ -115,12 +126,6 @@ module.exports = function travis () {
           else {
             data.id$ = travis_name
             travis_ent.make$(data).save$(done)
-            /* DEAN!!!!!!!!!!!!!
-            This is where were are doing the override command but without the override
-            possible issue here with it not having the object saved before 
-            the insert is called, not sure yet.
-            */
-            seneca.act('role:search,cmd:insert',{data:data})
           } 
         })
       }
@@ -129,6 +134,8 @@ module.exports = function travis () {
   }
   
   function cmd_extract (args, done) {
+    var seneca = this
+      
     var data = args.data
     var dist_tags = data['dist-tags'] || {}
     var latest = ((data.versions || {})[dist_tags.latest]) || {}
@@ -150,14 +157,3 @@ module.exports = function travis () {
       return null
     }
   }
-  
-  /*function override_index( args, done ) {
-    var seneca = this
-
-    seneca.prior(args, function(err,travis){
-      done(err,travis)
-
-      seneca.act('role:search,cmd:insert',{data:travis.data$()})
-    })
-  }*/
-}
