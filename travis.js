@@ -43,7 +43,7 @@ module.exports = function travis () {
       }
       else {
         // get url from npm
-        Request.get(url, function (err, res, body) {
+        Request.get({url: url, gzip: true}, function (err, res, body) {
           if (err) {
             return done(err)
           }
