@@ -23,7 +23,8 @@
     "url": "https://github.com/nodezoo/nodezoo-travis/issues"
   },
   "scripts": {
-    "start": "node srv/start.js"
+    "start": "node srv/start.js",
+    "lint": "lab test -dL"
   },
   "homepage": "https://github.com/nodezoo/nodezoo-travis#readme",
   "dependencies": {
