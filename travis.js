@@ -134,7 +134,6 @@ function cmd_query (args, done) {
         }
         else {
           data.id$ = travis_name
-          console.log(JSON.stringify(data))
           travis_ent.make$(data).save$(done)
         }
       })
