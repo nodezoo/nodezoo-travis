@@ -102,18 +102,28 @@ function cmd_query (args, done) {
       return done(err)
     }
     buildData = res
+    var build
 
-    if (repoData && buildData.builds[0]) {
-      var data = Object.assign(dat, repoData.repo, buildData.builds[0].config)
-    }
-    else if (repoData) {
-      data = Object.assign(dat, repoData.repo)
+    if (buildData) {
+      build = buildData.builds[0].config
     }
     else {
-      data = null
+      build = ''
     }
 
-    if (data !== null) {
+    var travisData = Object.assign(dat, repoData.repo || '', build)
+
+    var data = {
+      name: travisData.name || "",
+      url: travisData.url || "",
+      id: travisData.id || "",
+      group: travisData.group || "",
+      active: travisData.active || "",
+      buildState: travisData.last_build_state || "",
+      lastBuilt: travisData.last_build_started_at || ""
+    }
+
+    if (data) {
       // update the data if module exists in cache, if not create it
       travis_ent.load$(travis_name, function (err, travis) {
         if (err) {
