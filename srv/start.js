@@ -1,6 +1,14 @@
 'use strict'
 
+var opts = {
+  redis: {
+    host: 'localhost',
+    port: process.env.redis_PORT || 6379
+  }
+}
+
 require('seneca')()
+.use('redis-store', opts.redis)
 .use('entity')
 .use('../travis.js')
 .add('role:info,req:part',function (args,done) {
