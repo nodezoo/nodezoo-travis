@@ -6,7 +6,6 @@ var _ = require('lodash')
 var tr = new Travis({
   version: '2.0.0'
 })
-var url
 var opts = {
   registry: 'http://registry.npmjs.org/'
 }
@@ -83,62 +82,59 @@ function cmd_query (args, done) {
   var travis_name = args.name
   var user = args.user
   var repo = args.repo
-  var repoData
-  var buildData
-  url = 'https://travis-ci.org/' + user + '/' + repo
-  var dat = {
-    'name': travis_name,
-    'url': url
-  }
+  var travisData
 
+   // call to Travis module to get repo info
   tr.repos(user, repo).get(function (err, res) {
     if (err) {
       return done(err)
     }
-    repoData = res
-  })
-  tr.repos(user, repo).builds.get(function (err, res) {
-    if (err) {
-      return done(err)
-    }
-    buildData = res
-    var build
-
-    if (buildData) {
-      build = buildData.builds[0].config
+    if (res) {
+      travisData = res.repo
     }
     else {
-      build = ''
+      travisData = {}
     }
 
-    var travisData = Object.assign(dat, repoData.repo || '', build)
+   // call to Travis module to get build info
+    tr.repos(user, repo).builds.get(function (err, res) {
+      if (err) {
+        return done(err)
+      }
+      if (res.builds.length > 0) {
+        var build = res.builds[0].config
+      }
+      else {
+        build = {}
+      }
 
-    var data = {
-      name: travisData.name || "",
-      url: travisData.url || "",
-      id: travisData.id || "",
-      group: travisData.group || "",
-      active: travisData.active || "",
-      buildState: travisData.last_build_state || "",
-      lastBuilt: travisData.last_build_started_at || ""
-    }
+      var data = {
+        name: travis_name || '',
+        url: 'https://travis-ci.org/' + user + '/' + repo,
+        id: travisData.id || '',
+        group: build.group || '',
+        active: travisData.active || '',
+        buildState: travisData.last_build_state || '',
+        lastBuilt: travisData.last_build_started_at || ''
+      }
 
-    if (data) {
-      // update the data if module exists in cache, if not create it
-      travis_ent.load$(travis_name, function (err, travis) {
-        if (err) {
-          return done(err)
-        }
-        if (travis) {
-          return travis.data$(data).save$(done)
-        }
-        else {
-          data.id$ = travis_name
-          travis_ent.make$(data).save$(done)
-        }
-      })
-    }
-    else return done()
+      if (data) {
+        // update the data if module exists in cache, if not create it
+        travis_ent.load$(travis_name, function (err, travis) {
+          if (err) {
+            return done(err)
+          }
+          if (travis) {
+            return travis.data$(data).save$(done)
+          }
+          else {
+            data.id$ = travis_name
+            travis_ent.make$(data).save$(done)
+          }
+        })
+      }
+      else return done()
+    })
   })
 }
 
