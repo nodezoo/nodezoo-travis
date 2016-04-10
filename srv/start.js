@@ -1,30 +1,47 @@
 'use strict'
 
+var Seneca = require('seneca')
+var Entities = require('seneca-entity')
+var Mesh = require('seneca-mesh')
+var Travis = require('../lib/travis')
+var RedisStore = require('seneca-redis-store')
+
+var envs = process.env
 var opts = {
+  seneca: {
+    tag: envs.TRAVIS_TAG || 'nodezoo-travis'
+  },
+  travis: {
+    token: envs.TRAVIS_TOKEN || 'NO_TOKEN',
+    registry: envs.TRAVIS_REGISTRY || 'http://registry.npmjs.org/'
+  },
+  mesh: {
+    auto: true,
+    listen: [
+      {pin: 'role:travis,cmd:get', model: 'consume'},
+      {pin: 'role:info,req:part', model: 'observe'}
+    ]
+  },
+  isolated: {
+    host: envs.TRAVIS_HOST || 'localhost',
+    port: envs.TRAVIS_PORT || '8053'
+  },
   redis: {
-    host: 'localhost',
-    port: process.env.redis_PORT || 6379
+    host: envs.TRAVIS_REDIS_HOST || 'localhost',
+    port: envs.TRAVIS_REDIS_PORT || '6379'
   }
 }
 
-require('seneca')()
-.use('redis-store', opts.redis)
-.use('entity')
-.use('../travis.js')
-.add('role:info,req:part',function (args,done) {
-  done()
+var Service = Seneca(opts.seneca)
 
-  this.act('role:travis,cmd:get', {name:args.name},function (err, mod) {
-    if (err) {
-      return done(err);
-    }
+Service.use(Entities)
 
-    this.act('role:info,res:part,part:travis', {name:args.name,data:mod.data$()})
-  })
-})
+if (envs.TRAVIS_ISOLATED) {
+  Service.listen(opts.isolated)
+}
+else {
+  Service.use(Mesh, opts.mesh)
+  Service.use(RedisStore, opts.redis)
+}
 
-.add('role:travis,info:change', function (args,done) {
-  done()
-  this.act('role:travis,cmd:get', {name:args.name,update:true})
-})
-.use('../node_modules/seneca-mesh', {auto:true, pins:['role:travis','role:info,req:part'], model:'publish'} )
+Service.use(Travis, opts.travis)
