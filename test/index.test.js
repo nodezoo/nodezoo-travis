@@ -7,9 +7,9 @@ var _ = require('lodash')
 
 var lab = exports.lab = Lab.script()
 var describe = lab.describe
-var it = lab.it
 var suite = lab.suite
 var before = lab.before
+var it = lab.it
 var expect = Code.expect
 
 function createInstance () {
@@ -17,12 +17,25 @@ function createInstance () {
     .use('entity')
     .use('../lib/travis')
 }
-process.setMaxListeners(11);
+process.setMaxListeners(12)
+
+var si = createInstance()
+
+suite('nodezoo-travis suite tests ', function () {
+  before({}, function (done) {
+    si.ready(function (err) {
+      if (err) {
+        return process.exit(!console.error(err))
+      }
+      done()
+    })
+  })
+})
 
 describe('nodezoo-travis tests', () => {
   it('test Valid Response', function (done) {
     var si = createInstance()
-    var payload = { 'name': 'seneca', 'user': 'powerbrian', 'repo': 'https://github.com/senecajs/seneca' }
+    var payload = { 'name': 'seneca' }
     si.act(_.extend({ role: 'travis', cmd: 'get' }, payload), function (err, reply) {
       expect(err).to.not.exist()
       expect(reply).to.not.be.empty()
