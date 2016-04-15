@@ -11,6 +11,7 @@
 * Removed unneeded call to travis.
 * Removed testing logs
 * Fixed crash on build array being empty
+* Removed toolbag
 
 ## 6 April 2016 - 6.0.0
 
