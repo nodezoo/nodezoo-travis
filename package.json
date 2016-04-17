@@ -25,7 +25,8 @@
   "scripts": {
     "start": "node srv/start.js",
     "lint": "lab test -dL",
-    "isolated": "TRAVIS_ISOLATED=true node srv/start.js"
+    "isolated": "TRAVIS_ISOLATED=true node srv/start.js",
+    "test": "lab"
   },
   "homepage": "https://github.com/nodezoo/nodezoo-travis#readme",
   "dependencies": {
