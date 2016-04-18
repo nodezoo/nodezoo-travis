@@ -116,6 +116,15 @@ Called in response to a call to `role:info,req:part`.
 seneca.add(`role:info,res:part`, (msg, done) => {})
 ```
 
+## Data Emitted
+- name - Name of the module
+- url - URL to the module on the Travis-CI website
+- buildId - ID
+- active - Whether the repository is active or not
+- buildState - It's most recent build state
+- lastBuilt - The time and date the module was last built at
+- cached - The time the data was last cached at
+
 ## Contributing
 The [Nodezoo][Org] encourages __open__ and __safe__ participation.
 
