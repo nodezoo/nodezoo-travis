@@ -17,7 +17,7 @@ function createInstance () {
     .use('entity')
     .use('../lib/travis')
 }
-process.setMaxListeners(12)
+process.setMaxListeners(999)
 
 var si = createInstance()
 
@@ -39,6 +39,13 @@ describe('nodezoo-travis tests', () => {
     si.act(_.extend({ role: 'travis', cmd: 'get' }, payload), function (err, reply) {
       expect(err).to.not.exist()
       expect(reply).to.not.be.empty()
+      done(err)
+    })
+  })
+  it('test No Data', function (done) {
+    var si = createInstance()
+    si.act(_.extend({ role: 'travis', cmd: 'get' }), function (err, reply) {
+      expect(err).to.not.exist()
       done(err)
     })
   })
@@ -128,6 +135,22 @@ describe('nodezoo-travis tests', () => {
     si.act(_.extend({ role: 'travis', cmd: 'get' }, payload), function (err, reply) {
       expect(err).to.not.exist()
       expect(reply.lastBuilt).to.be.a.string()
+      done(err)
+    })
+  })
+  it('test aliasGet Invalid', function (done) {
+    var si = createInstance()
+    var payload = { 'name': 'scoobydoobydoo' }
+    si.act(_.extend({ role: 'info', req: 'part' }, payload), function (err, reply) {
+      expect(err).to.exist()
+      done()
+    })
+  })
+  it('test aliasGet RealData', function (done) {
+    var si = createInstance()
+    var payload = { 'name': 'seneca', 'user': 'powerbrian', 'repo': 'https://github.com/senecajs/seneca' }
+    si.act(_.extend({ role: 'info', req: 'part' }, payload), function (err, reply) {
+      expect(err).to.not.exist()
       done(err)
     })
   })
