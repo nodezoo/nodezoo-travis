@@ -26,7 +26,8 @@
     "start": "node srv/start.js",
     "lint": "lab test -dL",
     "isolated": "TRAVIS_ISOLATED=true node srv/start.js",
-    "test": "lab -v -P test -L -c -t 76"
+    "test": "lab -v -P test -L -c -t 76",
+    "cov": "lab -s -P test -r lcov | coveralls"
   },
   "homepage": "https://github.com/nodezoo/nodezoo-travis#readme",
   "dependencies": {
@@ -39,6 +40,7 @@
     "travis-ci": "2.1.0"
   },
   "devDependencies": {
+    "coveralls": "2.11.9",
     "code": "2.2.0",
     "eslint-config-seneca": "1.1.x",
     "eslint-plugin-hapi": "4.0.x",
