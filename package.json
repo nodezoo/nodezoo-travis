@@ -1,6 +1,6 @@
 {
   "name": "nodezoo-travis",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "description": "nodezoo.com micro-service handling travis meta data",
   "main": "travis.js",
   "repository": {
@@ -32,7 +32,7 @@
   "dependencies": {
     "request": "2.70.0",
     "seneca": "2.0.0",
-    "seneca-balance-client": "0.4.0",
+    "seneca-balance-client": "0.5.x",
     "seneca-entity": "0.0.1",
     "seneca-mesh": "0.7.0",
     "seneca-redis-store": "0.0.8",
