@@ -1,6 +1,6 @@
 {
   "name": "nodezoo-travis",
-  "version": "7.0.2",
+  "version": "7.1.0",
   "description": "nodezoo.com micro-service handling travis meta data",
   "main": "travis.js",
   "repository": {
