@@ -42,6 +42,7 @@ describe('nodezoo-travis tests', () => {
       done(err)
     })
   })
+
   it('test Everything', function (done) {
     var si = createInstance()
     var payload = { 'name': 'seneca', 'user': 'powerbrian', 'repo': 'https://github.com/senecajs/seneca' }
@@ -51,6 +52,7 @@ describe('nodezoo-travis tests', () => {
       done(err)
     })
   })
+
   it('test No Repo', function (done) {
     var si = createInstance()
     var payload = { 'name': 'seneca', 'user': 'powerbrian', 'repo': '' }
@@ -60,6 +62,7 @@ describe('nodezoo-travis tests', () => {
       done(err)
     })
   })
+
   it('test no User', function (done) {
     var si = createInstance()
     var payload = { 'name': 'seneca', 'user': '', 'repo': '' }
@@ -69,65 +72,111 @@ describe('nodezoo-travis tests', () => {
       done(err)
     })
   })
+
   it('test Invalid Response', function (done) {
     var si = createInstance()
     var payload = { 'name': 'shoobydoobydoobop' }
     si.act(_.extend({ role: 'travis', cmd: 'get' }, payload), function (err, reply) {
-      expect(err).to.exist()
+      expect(err).to.not.exist()
+      expect(reply).to.exist()
+      expect(reply.err).to.exist()
+      expect(reply.ok).to.be.false()
       done()
     })
   })
+
   it('test ID exists', function (done) {
     var si = createInstance()
     var payload = { 'name': 'seneca', 'user': 'powerbrian', 'repo': 'https://github.com/senecajs/seneca' }
     si.act(_.extend({ role: 'travis', cmd: 'get' }, payload), function (err, reply) {
       expect(err).to.not.exist()
-      expect(reply.id).to.be.a.string()
+
+      expect(reply).to.exist()
+      expect(reply.data).to.exist()
+      expect(reply.err).to.not.exist()
+      expect(reply.ok).to.be.true()
+
+      expect(reply.data.id).to.be.a.string()
       done(err)
     })
   })
+
   it('test URL exists', function (done) {
     var si = createInstance()
     var payload = { 'name': 'seneca', 'user': 'powerbrian', 'repo': 'https://github.com/senecajs/seneca' }
     si.act(_.extend({ role: 'travis', cmd: 'get' }, payload), function (err, reply) {
       expect(err).to.not.exist()
-      expect(reply.url).to.be.a.string()
+
+      expect(reply).to.exist()
+      expect(reply.data).to.exist()
+      expect(reply.err).to.not.exist()
+      expect(reply.ok).to.be.true()
+
+      expect(reply.data.url).to.be.a.string()
       done(err)
     })
   })
+
   it('test BuildID exists', function (done) {
     var si = createInstance()
     var payload = { 'name': 'seneca', 'user': 'powerbrian', 'repo': 'https://github.com/senecajs/seneca' }
     si.act(_.extend({ role: 'travis', cmd: 'get' }, payload), function (err, reply) {
       expect(err).to.not.exist()
-      expect(reply.buildId).to.be.a.number()
+
+      expect(reply).to.exist()
+      expect(reply.data).to.exist()
+      expect(reply.err).to.not.exist()
+      expect(reply.ok).to.be.true()
+
+      expect(reply.data.buildId).to.be.a.number()
       done(err)
     })
   })
+
   it('test Active exists', function (done) {
     var si = createInstance()
     var payload = { 'name': 'seneca', 'user': 'powerbrian', 'repo': 'https://github.com/senecajs/seneca' }
     si.act(_.extend({ role: 'travis', cmd: 'get' }, payload), function (err, reply) {
       expect(err).to.not.exist()
-      expect(reply.active).to.be.a.boolean()
+
+      expect(reply).to.exist()
+      expect(reply.data).to.exist()
+      expect(reply.err).to.not.exist()
+      expect(reply.ok).to.be.true()
+
+      expect(reply.data.active).to.be.a.boolean()
       done(err)
     })
   })
+
   it('test buildState exists', function (done) {
     var si = createInstance()
     var payload = { 'name': 'seneca', 'user': 'powerbrian', 'repo': 'https://github.com/senecajs/seneca' }
     si.act(_.extend({ role: 'travis', cmd: 'get' }, payload), function (err, reply) {
       expect(err).to.not.exist()
-      expect(reply.buildState).to.be.a.string()
+
+      expect(reply).to.exist()
+      expect(reply.data).to.exist()
+      expect(reply.err).to.not.exist()
+      expect(reply.ok).to.be.true()
+
+      expect(reply.data.buildState).to.be.a.string()
       done(err)
     })
   })
+
   it('test lastBuilt exists', function (done) {
     var si = createInstance()
     var payload = { 'name': 'seneca', 'user': 'powerbrian', 'repo': 'https://github.com/senecajs/seneca' }
     si.act(_.extend({ role: 'travis', cmd: 'get' }, payload), function (err, reply) {
       expect(err).to.not.exist()
-      expect(reply.lastBuilt).to.be.a.string()
+
+      expect(reply).to.exist()
+      expect(reply.data).to.exist()
+      expect(reply.err).to.not.exist()
+      expect(reply.ok).to.be.true()
+
+      expect(reply.data.lastBuilt).to.be.a.string()
       done(err)
     })
   })
