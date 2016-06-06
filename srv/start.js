@@ -20,8 +20,8 @@ var opts = {
     host: envs.TRAVIS_HOST || '127.0.0.1',
     bases: [envs.BASE_HOST || '127.0.0.1:39999'],
     listen: [
-      {pin: 'role:travis,cmd:get', model: 'consume'},
-      {pin: 'role:info,req:part', model: 'observe'}
+      {pin: 'role:travis,cmd:get', model: 'consume', host: envs.TRAVIS_HOST || '127.0.0.1'},
+      {pin: 'role:info,req:part', model: 'observe', host: envs.TRAVIS_HOST || '127.0.0.1'}
     ]
   },
   isolated: {
