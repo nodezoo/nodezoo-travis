@@ -22,6 +22,14 @@
   "bugs": {
     "url": "https://github.com/nodezoo/nodezoo-travis/issues"
   },
+  "files": [
+    "lib",
+    "srv",
+    "README.md",
+    "Dockerfile",
+    "package.json",
+    "LICENSE"
+  ],
   "scripts": {
     "start": "node srv/start.js",
     "lint": "lab test -dL",
