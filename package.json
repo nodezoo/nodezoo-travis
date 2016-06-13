@@ -25,7 +25,6 @@
   "files": [
     "lib",
     "srv",
-    "CHANGELOG.md",
     "README.md",
     "Dockerfile",
     "package.json"
