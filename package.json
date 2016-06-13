@@ -27,7 +27,8 @@
     "srv",
     "CHANGELOG.md",
     "README.md",
-    "Dockerfile"
+    "Dockerfile",
+    "package.json"
   ],
   "scripts": {
     "start": "node srv/start.js",
