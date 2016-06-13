@@ -27,7 +27,8 @@
     "srv",
     "README.md",
     "Dockerfile",
-    "package.json"
+    "package.json",
+    "LICENSE"
   ],
   "scripts": {
     "start": "node srv/start.js",
